@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}HackathonHub | Submit Your Innovation{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-text">
+        <span class="badge">🚀 India's Ultimate Hackathon Submission Platform</span>
+
+        <h1>
+            Submit, Track & Win Your
+            <span class="gradient-text">Hackathon Project</span>
+        </h1>
+
+        <p>
+            A complete platform for students to upload projects, submit GitHub repositories,
+            share presentations, and receive scores and feedback from judges — all in one place.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/register" class="btn-primary">
+                <i class="fa-solid fa-rocket"></i>
+                Get Started
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <h3>🏆 Platform Highlights</h3>
+        <ul>
+            <li>📤 Upload PPT, PDF & Reports</li>
+            <li>🔗 Submit GitHub Repository Links</li>
+            <li>🎥 Add Demo Video URLs</li>
+            <li>⏰ Automatic Deadline Enforcement</li>
+            <li>⭐ Admin Review & Scoring</li>
+            <li>📊 Real-Time Submission Status</li>
+        </ul>
+    </div>
+</section>
+
+<!-- STATS SECTION -->
+<section class="stats-grid" style="margin-top: 50px;">
+    <div class="stat-card text-center">
+        <h3>👨‍💻 Participants</h3>
+        <p>500+</p>
+    </div>
+
+    <div class="stat-card text-center">
+        <h3>📁 Submissions</h3>
+        <p>200+</p>
+    </div>
+
+    <div class="stat-card text-center">
+        <h3>🏆 Winners</h3>
+        <p>50+</p>
+    </div>
+
+    <div class="stat-card text-center">
+        <h3>🏫 Colleges</h3>
+        <p>20+</p>
+    </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section style="margin-top: 70px;">
+    <h2 class="page-title text-center">✨ Powerful Features</h2>
+
+    <div class="stats-grid">
+        <div class="card text-center">
+            <h3>🔐 Secure Authentication</h3>
+            <p>Separate login for participants and administrators.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>📤 Project Upload</h3>
+            <p>Upload presentations, reports, and documentation files.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>📅 Deadline Control</h3>
+            <p>Automatic closing of submissions after the deadline.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>⭐ Review & Scoring</h3>
+            <p>Admins can evaluate and assign scores instantly.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>📊 Live Dashboard</h3>
+            <p>Participants can monitor submission status in real time.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>📥 Download Files</h3>
+            <p>Judges can download and review all uploaded files.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="margin-top: 70px;">
+    <h2 class="page-title text-center">⚙️ How It Works</h2>
+
+    <div class="stats-grid">
+        <div class="card text-center">
+            <h3>1️⃣ Register</h3>
+            <p>Create your participant account.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>2️⃣ Submit</h3>
+            <p>Upload project files and links.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>3️⃣ Review</h3>
+            <p>Admins evaluate and score your project.</p>
+        </div>
+
+        <div class="card text-center">
+            <h3>4️⃣ Results</h3>
+            <p>View feedback and final score.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="card text-center" style="margin-top: 80px; padding: 60px 40px;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">
+        Ready to Showcase Your Innovation?
+    </h2>
+
+    <p style="font-size: 1.1rem; margin-bottom: 30px;">
+        Join the platform and submit your hackathon project with confidence.
+    </p>
+
+    <div class="hero-buttons" style="justify-content: center;">
+        <a href="/register" class="btn-primary">
+            <i class="fa-solid fa-user-plus"></i>
+            Register Now
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center" style="margin-top: 50px; color: rgba(255,255,255,0.9);">
+    <p>© 2026 HackathonHub • Built with Flask, SQLite & Passion 🚀</p>
+</footer>
+
+{% endblock %}

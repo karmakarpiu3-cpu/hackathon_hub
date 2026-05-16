@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile | HackathonHub{% endblock %}
+
+{% block content %}
+
+<div class="auth-card" style="max-width: 550px;">
+
+    <h2 style="margin-bottom: 5px;">✏️ Edit Profile</h2>
+    <p style="margin-bottom: 25px;">Update your profile information</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+            <div class="alert">
+                <i class="fa-solid fa-circle-check"></i> {{ msg }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <!-- Avatar Upload -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div id="avatarPreview" style="
+                width: 90px; height: 90px; border-radius: 50%;
+                background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                margin: 0 auto 10px; display: flex;
+                align-items: center; justify-content: center;
+                font-size: 2rem; color: white; overflow: hidden;
+                border: 3px solid #e2e8f0;
+            ">
+                {% if user['avatar'] %}
+                    <img src="/uploads/avatars/{{ user['avatar'] }}"
+                         style="width:100%; height:100%; object-fit:cover;">
+                {% else %}
+                    {{ user['name'][0] | upper }}
+                {% endif %}
+            </div>
+            <label for="avatar" style="cursor: pointer; color: #4f46e5; font-size: 0.9rem;">
+                <i class="fa-solid fa-upload"></i> Change Photo
+            </label>
+            <input type="file" name="avatar" id="avatar" accept="image/*"
+                   style="display: none;" onchange="previewAvatar(this)">
+        </div>
+
+        <label>Full Name</label>
+        <input type="text" name="name" value="{{ user['name'] }}" required>
+
+        <label>College / Institution</label>
+        <input type="text" name="college" value="{{ user['college'] or '' }}"
+               placeholder="e.g. IIT Delhi">
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone" value="{{ user['phone'] or '' }}"
+               placeholder="e.g. 9876543210">
+
+        <label>GitHub Profile URL</label>
+        <input type="url" name="github_profile"
+               value="{{ user['github_profile'] or '' }}"
+               placeholder="https://github.com/yourusername">
+
+        <button type="submit" class="btn-primary full-width" style="margin-top: 10px;">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save Changes
+        </button>
+
+        <a href="/dashboard" class="btn-secondary full-width"
+           style="margin-top: 10px; text-align: center;">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+
+    </form>
+
+</div>
+
+<script>
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('avatarPreview');
+            preview.innerHTML = `<img src="${e.target.result}"
+                style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+
+{% endblock %}

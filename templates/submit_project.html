@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Submit Project</h2>
+<form method="POST" enctype="multipart/form-data">
+    <input type="text" name="project_title" placeholder="Project Title" required>
+    <textarea name="description" placeholder="Project Description" required></textarea>
+    <input type="url" name="github_link" placeholder="GitHub Link" required>
+    <input type="url" name="video_link" placeholder="Video Demo Link">
+
+    <label>PPT File</label>
+    <input type="file" name="ppt_file" required>
+
+    <label>Final Report (PDF)</label>
+    <input type="file" name="report_file" required>
+
+    <button type="submit">Submit Project</button>
+</form>
+{% endblock %}

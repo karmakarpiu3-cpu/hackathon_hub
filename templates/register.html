@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | HackathonHub{% endblock %}
+
+{% block content %}
+
+<div class="auth-card" style="max-width: 550px;">
+
+    <h2 style="margin-bottom: 5px;">📝 Create Account</h2>
+    <p style="margin-bottom: 25px;">Join HackathonHub and submit your project</p>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <!-- Avatar Upload — mandatory -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div id="avatarPreview" style="
+                width: 90px; height: 90px; border-radius: 50%;
+                background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                margin: 0 auto 10px; display: flex;
+                align-items: center; justify-content: center;
+                font-size: 2rem; color: white; overflow: hidden;
+                border: 3px solid #e2e8f0; cursor: pointer;
+            ">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+            <label for="avatar" style="cursor: pointer; color: #4f46e5; font-size: 0.9rem;">
+                <i class="fa-solid fa-upload"></i> Upload Profile Photo <span style="color:red;">*</span>
+            </label>
+            <input type="file" name="avatar" id="avatar" accept="image/*"
+                   style="display: none;" onchange="previewAvatar(this)" required>
+            <p id="avatarError" style="color:red;font-size:0.8rem;display:none;">Profile photo is required.</p>
+        </div>
+
+        <label>Full Name <span style="color:red;">*</span></label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+
+        <label>Email Address <span style="color:red;">*</span></label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+
+        <label>Password <span style="color:red;">*</span></label>
+        <input type="password" name="password" placeholder="Create a password" required minlength="6">
+
+        <label>College / Institution <span style="color:red;">*</span></label>
+        <input type="text" name="college" placeholder="e.g. IIT Delhi" required>
+
+        <label>Phone Number <span style="color:red;">*</span></label>
+        <input type="tel" name="phone" placeholder="e.g. 9876543210" required pattern="[0-9]{10}" title="Enter valid 10-digit phone number">
+
+        <label>GitHub Profile URL</label>
+        <input type="url" name="github_profile" placeholder="https://github.com/yourusername">
+
+        <button type="submit" class="btn-primary full-width" style="margin-top: 10px;" onclick="return validateAvatar()">
+            <i class="fa-solid fa-user-plus"></i>
+            Register
+        </button>
+
+    </form>
+
+    <p class="text-center" style="margin-top: 20px;">
+        Already have an account? <a href="/login">Login here</a>
+    </p>
+
+</div>
+
+<script>
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('avatarPreview');
+            preview.innerHTML = `<img src="${e.target.result}"
+                style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function validateAvatar() {
+    const avatar = document.getElementById('avatar');
+    if (!avatar.files || avatar.files.length === 0) {
+        document.getElementById('avatarError').style.display = 'block';
+        return false;
+    }
+    return true;
+}
+</script>
+
+{% endblock %}

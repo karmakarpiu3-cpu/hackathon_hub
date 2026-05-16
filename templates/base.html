@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}HackathonHub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  </head>
+  <body>
+
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="logo">
+          <i class="fa-solid fa-trophy"></i> HackathonHub
+        </a>
+        <div class="nav-links">
+          {% if session.get('user_id') %}
+
+            {% if session.get('role') == 'admin' %}
+              <a href="/admin">Admin Dashboard</a>
+            {% else %}
+              <a href="/dashboard">Dashboard</a>
+            {% endif %}
+
+            <a href="/">Home</a>
+            <div class="avatar-btn" onclick="togglePanel()" id="avatarBtn" style="width:38px;height:38px;border-radius:50%;background:#7c3aed;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold;overflow:hidden;">
+              {% if session.get('avatar') %}
+                <img src="/uploads/avatars/{{ session['avatar'] }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;">
+              {% else %}
+                {{ session['name'][0] | upper }}
+              {% endif %}
+            </div>
+
+          {% else %}
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+            <a href="/register" class="btn-nav">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            {% if category == 'error' %}
+              <div class="alert" style="background:#fee2e2;color:#991b1b;border-left-color:#ef4444;">
+                <i class="fa-solid fa-circle-xmark"></i> {{ msg }}
+              </div>
+            {% else %}
+              <div class="alert" style="background:#dcfce7;color:#166534;border-left-color:#22c55e;">
+                <i class="fa-solid fa-circle-check"></i> {{ msg }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    {% if session.get('user_id') %}
+
+    <div class="side-panel" id="sidePanel">
+      <button class="panel-close" onclick="togglePanel()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="panel-profile">
+        <div class="panel-avatar">
+          {% if session.get('avatar') %}
+            <img src="/uploads/avatars/{{ session['avatar'] }}" alt="avatar">
+          {% else %}
+            {{ session['name'][0] | upper }}
+          {% endif %}
+        </div>
+        <h3>{{ session['name'] }}</h3>
+        <p>{{ session.get('email', '') }}</p>
+        {% if session.get('college') %}
+        <p style="font-size:0.8rem;margin-top:4px;">
+          <i class="fa-solid fa-school"></i> {{ session['college'] }}
+        </p>
+        {% endif %}
+        <span class="panel-role-badge">
+          {% if session.get('role') == 'admin' %}👑 Admin{% else %}👨‍💻 Participant{% endif %}
+        </span>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      {% if session.get('role') == 'admin' %}
+        <a href="/admin" class="panel-link"><i class="fa-solid fa-gauge"></i> Admin Dashboard</a>
+        <a href="/admin" class="panel-link"><i class="fa-solid fa-users"></i> All Submissions</a>
+      {% else %}
+        <a href="/dashboard" class="panel-link"><i class="fa-solid fa-chart-line"></i> My Dashboard</a>
+        <div class="panel-submission-box">
+          <p class="panel-sub-label"><i class="fa-solid fa-folder"></i> Total Submissions</p>
+          <p class="panel-sub-value" id="totalSub">—</p>
+          <p class="panel-sub-label" style="margin-top:10px;"><i class="fa-solid fa-star"></i> My Score</p>
+          <p class="panel-sub-value" id="myScore">—</p>
+          <p class="panel-sub-label" style="margin-top:10px;"><i class="fa-solid fa-clock-rotate-left"></i> Last Submitted</p>
+          <p class="panel-sub-value" id="lastSub" style="font-size:0.8rem;">—</p>
+        </div>
+        <a href="/submit" class="panel-link"><i class="fa-solid fa-upload"></i> Submit Project</a>
+        <a href="/edit_profile" class="panel-link"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+      {% endif %}
+
+      <div class="panel-divider"></div>
+      <a href="/logout" class="panel-link panel-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+
+    <div class="panel-overlay" id="panelOverlay" onclick="togglePanel()"></div>
+
+    <script>
+      function togglePanel() {
+        document.getElementById('sidePanel').classList.toggle('open');
+        document.getElementById('panelOverlay').classList.toggle('show');
+      }
+      fetch('/api/my_submission')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('totalSub').textContent = data.total || '0';
+          document.getElementById('myScore').textContent = data.score ? data.score + '/100' : 'Not graded';
+          document.getElementById('lastSub').textContent = data.submit_time || 'No submission yet';
+        }).catch(() => {});
+    </script>
+
+    {% endif %}
+  </body>
+</html>

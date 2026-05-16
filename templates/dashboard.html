@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | HackathonHub{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">📊 Participant Dashboard</h1>
+
+<div class="card" style="margin-bottom: 30px;">
+    <h2>Welcome back, {{ session['name'] }} 👋</h2>
+    <p>
+        Track your project submission status, review feedback,
+        and submission deadline from one place.
+    </p>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <h3>📅 Submission Deadline</h3>
+        <p>{{ deadline }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>📂 Submission Status</h3>
+        <p>
+            {% if submission %}
+                ✅ Submitted
+            {% else %}
+                ❌ Not Submitted
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="stat-card">
+        <h3>⭐ Review Status</h3>
+        <p>
+            {% if submission %}
+                {{ submission['admin_review'] }}
+            {% else %}
+                Pending
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="stat-card">
+        <h3>🏆 Score</h3>
+        <p>
+            {% if submission and submission['score'] %}
+                {{ submission['score'] }}/100
+            {% else %}
+                Not Graded
+            {% endif %}
+        </p>
+    </div>
+
+</div>
+
+{% if deadline_passed %}
+<div class="alert" style="background: #fee2e2; color: #991b1b; border-left-color: #ef4444;">
+    ⛔ Submission deadline has passed. Project submission is now closed.
+</div>
+{% endif %}
+
+<div class="card" style="margin-top: 30px;">
+
+    {% if submission %}
+
+        <h2 style="margin-bottom: 20px;">📁 Your Submission Details</h2>
+
+        <p><strong>Project Title:</strong> {{ submission['project_title'] }}</p>
+
+        {% if submission['description'] %}
+        <p style="margin-top: 10px;">
+            <strong>Description:</strong><br>
+            {{ submission['description'] }}
+        </p>
+        {% endif %}
+
+        {% if submission['github_link'] %}
+        <p style="margin-top: 10px;">
+            <strong>GitHub Repository:</strong><br>
+            <a href="{{ submission['github_link'] }}" target="_blank">
+                {{ submission['github_link'] }}
+            </a>
+        </p>
+        {% endif %}
+
+        {% if submission['video_link'] %}
+        <p style="margin-top: 10px;">
+            <strong>Demo Video:</strong><br>
+            <a href="{{ submission['video_link'] }}" target="_blank">
+                {{ submission['video_link'] }}
+            </a>
+        </p>
+        {% endif %}
+
+        <p style="margin-top: 10px;">
+            <strong>Submitted At:</strong> {{ submission['submit_time'] }}
+        </p>
+
+        <p style="margin-top: 10px;">
+            <strong>Admin Review:</strong> {{ submission['admin_review'] }}
+        </p>
+
+        <p style="margin-top: 10px;">
+            <strong>Score:</strong>
+            {% if submission['score'] %}
+                {{ submission['score'] }}/100
+            {% else %}
+                Not graded yet
+            {% endif %}
+        </p>
+
+        <div class="hero-buttons" style="margin-top: 25px;">
+
+            {% if submission['ppt_file'] %}
+            <a class="btn-secondary"
+               href="/uploads/ppt/{{ submission['ppt_file'] }}"
+               target="_blank">
+                <i class="fa-solid fa-file-powerpoint"></i>
+                View PPT
+            </a>
+            {% endif %}
+
+            {% if submission['report_file'] %}
+            <a class="btn-secondary"
+               href="/uploads/reports/{{ submission['report_file'] }}"
+               target="_blank">
+                <i class="fa-solid fa-file-pdf"></i>
+                View Report
+            </a>
+            {% endif %}
+
+            {% if not deadline_passed and submission['admin_review'] == 'Pending' %}
+            <a class="btn-primary" href="/submit">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Edit Submission
+            </a>
+            {% elif deadline_passed %}
+            <p style="color: #991b1b; font-weight: 600; margin-top: 10px;">
+                ⛔ Deadline pass ho gayi — editing band hai.
+            </p>
+            {% elif submission['admin_review'] != 'Pending' %}
+            <p style="color: #991b1b; font-weight: 600; margin-top: 10px;">
+                🔒 Admin ne review kar diya — editing band hai.
+            </p>
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="text-center">
+            <h2>🚀 No Submission Yet</h2>
+            <p>
+                You have not submitted your project yet.
+                Upload your project before the deadline.
+            </p>
+
+            {% if not deadline_passed %}
+            <a class="btn-primary" href="/submit" style="margin-top: 20px;">
+                <i class="fa-solid fa-upload"></i>
+                Submit Project Now
+            </a>
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

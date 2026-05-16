@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Submission | HackathonHub{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 700px; margin: auto; padding: 20px;">
+
+    <h2 style="color: white; margin-bottom: 20px;">🔍 Review Submission</h2>
+
+    <div class="card" style="margin-bottom: 20px;">
+
+        <h3 style="margin-bottom: 15px;">📁 Project Details</h3>
+
+        <p style="margin-bottom: 10px;">
+            <strong>Project Title:</strong>
+            {{ submission['project_title'] }}
+        </p>
+
+        {% if submission['description'] %}
+        <p style="margin-bottom: 10px;">
+            <strong>Description:</strong><br>
+            {{ submission['description'] }}
+        </p>
+        {% endif %}
+
+        {% if submission['github_link'] %}
+        <p style="margin-bottom: 10px;">
+            <strong>GitHub Repository:</strong><br>
+            <a href="{{ submission['github_link'] }}" target="_blank" style="color: #4f46e5;">
+                <i class="fa-brands fa-github"></i>
+                {{ submission['github_link'] }}
+            </a>
+        </p>
+        {% endif %}
+
+        {% if submission['video_link'] %}
+        <p style="margin-bottom: 10px;">
+            <strong>Demo Video:</strong><br>
+            <a href="{{ submission['video_link'] }}" target="_blank" style="color: #4f46e5;">
+                <i class="fa-solid fa-video"></i>
+                {{ submission['video_link'] }}
+            </a>
+        </p>
+        {% endif %}
+
+        <p style="margin-bottom: 10px;">
+            <strong>Submitted At:</strong>
+            {{ submission['submit_time'] }}
+        </p>
+
+        <div style="display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
+
+            {% if submission['ppt_file'] %}
+            <a href="/uploads/ppt/{{ submission['ppt_file'] }}"
+               target="_blank"
+               class="btn-secondary">
+                <i class="fa-solid fa-file-powerpoint"></i>
+                Download PPT
+            </a>
+            {% endif %}
+
+            {% if submission['report_file'] %}
+            <a href="/uploads/reports/{{ submission['report_file'] }}"
+               target="_blank"
+               class="btn-secondary">
+                <i class="fa-solid fa-file-pdf"></i>
+                Download Report
+            </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3 style="margin-bottom: 15px;">⭐ Admin Review</h3>
+
+        <form method="POST">
+
+            <label>Review Decision</label>
+            <select name="admin_review">
+                <option value="Pending" {% if submission['admin_review'] == 'Pending' %}selected{% endif %}>⏳ Pending</option>
+                <option value="Accepted" {% if submission['admin_review'] == 'Accepted' %}selected{% endif %}>✅ Accepted</option>
+                <option value="Needs Improvement" {% if submission['admin_review'] == 'Needs Improvement' %}selected{% endif %}>⚠️ Needs Improvement</option>
+                <option value="Rejected" {% if submission['admin_review'] == 'Rejected' %}selected{% endif %}>❌ Rejected</option>
+            </select>
+
+            <label>Score (0 - 100)</label>
+            <input
+                type="number"
+                name="score"
+                min="0"
+                max="100"
+                value="{{ submission['score'] or '' }}"
+                placeholder="e.g. 85"
+            >
+
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-check"></i>
+                    Save Review
+                </button>
+
+                <a href="/admin" class="btn-secondary">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
