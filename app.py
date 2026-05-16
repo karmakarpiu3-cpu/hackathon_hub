@@ -136,10 +136,10 @@ def register():
                 (name, email, password, 'participant', college, phone, github_profile, avatar_filename)
             )
             conn.commit()
-            flash('Registration successful!', 'success')  # ✅
+            flash('Registration successful!', 'success')
             return redirect('/login')
         except sqlite3.IntegrityError:
-            flash('Email already exists.', 'error')  # ❌
+            flash('Email already exists.', 'error')
         finally:
             conn.close()
 
@@ -169,12 +169,12 @@ def login():
             session['phone'] = user['phone']
             session['github_profile'] = user['github_profile']
 
-            flash(f'Welcome, {user["name"]}!', 'success')  # ✅
+            flash(f'Welcome, {user["name"]}!', 'success')
             if user['role'] == 'admin':
                 return redirect('/admin')
             return redirect('/dashboard')
         else:
-            flash('Invalid credentials.', 'error')  # ❌
+            flash('Invalid credentials.', 'error')
 
     return render_template('login.html')
 
@@ -211,7 +211,7 @@ def submit_project():
         return redirect('/login')
 
     if is_deadline_passed():
-        flash('Submission deadline has passed.', 'error')  # ❌
+        flash('Submission deadline has passed.', 'error')
         return redirect('/dashboard')
 
     if request.method == 'POST':
@@ -268,7 +268,7 @@ def submit_project():
 
         conn.commit()
         conn.close()
-        flash('Project submitted successfully!', 'success')  # ✅
+        flash('Project submitted successfully!', 'success')
         return redirect('/dashboard')
 
     return render_template('submit_project.html')
@@ -306,7 +306,7 @@ def edit_profile():
         session['github_profile'] = github_profile
         session['avatar'] = avatar_filename
 
-        flash('Profile updated successfully!', 'success')  # ✅
+        flash('Profile updated successfully!', 'success')
         conn.close()
         return redirect('/dashboard')
 
@@ -325,9 +325,10 @@ def admin_dashboard():
         conn.execute("UPDATE settings SET deadline = ? WHERE id = 1", (deadline,))
         conn.commit()
         conn.close()
-        flash('Deadline updated successfully!', 'success')  # ✅
+        flash('Deadline updated successfully!', 'success')
 
     conn = get_db_connection()
+
     submissions = conn.execute('''
         SELECT submissions.*,
                COALESCE(users.name, 'Deleted User') as name,
@@ -336,11 +337,20 @@ def admin_dashboard():
         LEFT JOIN users ON submissions.user_id = users.id
         ORDER BY submit_time DESC
     ''').fetchall()
+
+    users = conn.execute('''
+        SELECT id, name, email, college, phone, github_profile
+        FROM users
+        WHERE role = 'participant'
+        ORDER BY id DESC
+    ''').fetchall()
+
     conn.close()
 
     return render_template(
         'admin_dashboard.html',
         submissions=submissions,
+        users=users,
         deadline=get_deadline()
     )
 
@@ -380,7 +390,7 @@ def review_submission(submission_id):
         ''', (review, score, submission_id))
         conn.commit()
         conn.close()
-        flash('Review submitted successfully!', 'success')  # ✅
+        flash('Review submitted successfully!', 'success')
         return redirect('/admin')
 
     submission = conn.execute(
@@ -400,31 +410,33 @@ def uploaded_file(folder, filename):
     elif folder == 'avatars':
         return send_from_directory(AVATAR_FOLDER, filename)
     return 'Invalid folder'
+
+
 @app.route('/admin/db-viewer')
 def db_viewer():
     if session.get('role') != 'admin':
         return redirect('/login')
-    
+
     conn = get_db_connection()
-    
+
     users = conn.execute('''
         SELECT id, name, email, role, college, phone, github_profile 
         FROM users
         ORDER BY id DESC
     ''').fetchall()
-    
+
     submissions = conn.execute('''
         SELECT submissions.*, users.name as user_name, users.email as user_email
         FROM submissions
         LEFT JOIN users ON submissions.user_id = users.id
         ORDER BY submit_time DESC
     ''').fetchall()
-    
+
     conn.close()
-    
-    return render_template('db_viewer.html', 
-                         users=users, 
-                         submissions=submissions)
+
+    return render_template('db_viewer.html',
+                           users=users,
+                           submissions=submissions)
 
 
 if __name__ == '__main__':

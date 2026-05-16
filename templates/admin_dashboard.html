@@ -19,6 +19,11 @@
 <div class="stats-grid">
 
     <div class="stat-card">
+        <h3>👥 Total Registered</h3>
+        <p>{{ users|length }}</p>
+    </div>
+
+    <div class="stat-card">
         <h3>📁 Total Submissions</h3>
         <p>{{ submissions|length }}</p>
     </div>
@@ -71,6 +76,53 @@
             Update Deadline
         </button>
     </form>
+</div>
+
+<!-- Registered Users Table -->
+<div class="card" style="margin-bottom: 30px;">
+    <h2>👥 Registered Participants</h2>
+
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>College</th>
+                <th>Phone</th>
+                <th>GitHub</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ u['name'] }}</strong></td>
+                <td>{{ u['email'] }}</td>
+                <td>{{ u['college'] or '—' }}</td>
+                <td>{{ u['phone'] or '—' }}</td>
+                <td>
+                    {% if u['github_profile'] %}
+                        <a href="{{ u['github_profile'] }}" target="_blank">
+                            <i class="fa-brands fa-github"></i> View
+                        </a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <div class="text-center" style="padding: 40px 0;">
+        <h3>📭 No Participants Yet</h3>
+        <p>No one has registered yet.</p>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Submission Table -->
