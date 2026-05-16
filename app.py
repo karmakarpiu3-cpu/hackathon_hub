@@ -400,6 +400,31 @@ def uploaded_file(folder, filename):
     elif folder == 'avatars':
         return send_from_directory(AVATAR_FOLDER, filename)
     return 'Invalid folder'
+@app.route('/admin/db-viewer')
+def db_viewer():
+    if session.get('role') != 'admin':
+        return redirect('/login')
+    
+    conn = get_db_connection()
+    
+    users = conn.execute('''
+        SELECT id, name, email, role, college, phone, github_profile 
+        FROM users
+        ORDER BY id DESC
+    ''').fetchall()
+    
+    submissions = conn.execute('''
+        SELECT submissions.*, users.name as user_name, users.email as user_email
+        FROM submissions
+        LEFT JOIN users ON submissions.user_id = users.id
+        ORDER BY submit_time DESC
+    ''').fetchall()
+    
+    conn.close()
+    
+    return render_template('db_viewer.html', 
+                         users=users, 
+                         submissions=submissions)
 
 
 if __name__ == '__main__':

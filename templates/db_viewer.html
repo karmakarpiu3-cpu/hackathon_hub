@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DB Viewer</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #111; color: #eee; }
+        h2 { color: #4CAF50; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th { background: #333; padding: 10px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid #333; font-size: 13px; }
+        tr:hover { background: #1a1a1a; }
+        .badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+        .admin { background: #ff5722; }
+        .participant { background: #2196F3; }
+        a { color: #4CAF50; }
+    </style>
+</head>
+<body>
+    <a href="/admin">← Back to Admin</a>
+    
+    <h2>👥 Users ({{ users|length }})</h2>
+    <table>
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th>
+            <th>Role</th><th>College</th><th>Phone</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td><span class="badge {{ u.role }}">{{ u.role }}</span></td>
+            <td>{{ u.college or '-' }}</td>
+            <td>{{ u.phone or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>📁 Submissions ({{ submissions|length }})</h2>
+    <table>
+        <tr>
+            <th>ID</th><th>User</th><th>Project</th>
+            <th>Status</th><th>Score</th><th>Submit Time</th>
+        </tr>
+        {% for s in submissions %}
+        <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.user_name }}<br><small>{{ s.user_email }}</small></td>
+            <td>{{ s.project_title }}<br>
+                {% if s.github_link %}
+                <a href="{{ s.github_link }}" target="_blank">GitHub</a>
+                {% endif %}
+            </td>
+            <td>{{ s.status }}</td>
+            <td>{{ s.score or '-' }}</td>
+            <td>{{ s.submit_time or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
