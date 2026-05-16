@@ -92,6 +92,7 @@
                 <th>College</th>
                 <th>Phone</th>
                 <th>GitHub</th>
+                <th>Action</th>
             </tr>
         </thead>
 
@@ -99,18 +100,26 @@
             {% for u in users %}
             <tr>
                 <td>{{ loop.index }}</td>
-                <td><strong>{{ u['name'] }}</strong></td>
-                <td>{{ u['email'] }}</td>
-                <td>{{ u['college'] or '—' }}</td>
-                <td>{{ u['phone'] or '—' }}</td>
+                <td><strong>{{ u.name }}</strong></td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.college or '—' }}</td>
+                <td>{{ u.phone or '—' }}</td>
                 <td>
-                    {% if u['github_profile'] %}
-                        <a href="{{ u['github_profile'] }}" target="_blank">
+                    {% if u.github_profile %}
+                        <a href="{{ u.github_profile }}" target="_blank">
                             <i class="fa-brands fa-github"></i> View
                         </a>
                     {% else %}
                         —
                     {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="/admin/delete_user/{{ u.id }}"
+                          onsubmit="return confirm('Are you sure you want to delete {{ u.name }}?')">
+                        <button type="submit" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                            🗑️ Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
@@ -145,24 +154,24 @@
             {% for s in submissions %}
             <tr>
                 <td>
-                    <strong>{{ s['name'] }}</strong><br>
-                    <small>{{ s['email'] }}</small>
+                    <strong>{{ s.name }}</strong><br>
+                    <small>{{ s.email }}</small>
                 </td>
 
                 <td>
-                    {{ s['project_title'] or 'Untitled Project' }}
+                    {{ s.project_title or 'Untitled Project' }}
                 </td>
 
                 <td>
-                    {% if s['admin_review'] == 'Accepted' %}
+                    {% if s.admin_review == 'Accepted' %}
                         <span style="color: #10b981; font-weight: 600;">
                             ✅ Accepted
                         </span>
-                    {% elif s['admin_review'] == 'Rejected' %}
+                    {% elif s.admin_review == 'Rejected' %}
                         <span style="color: #ef4444; font-weight: 600;">
                             ❌ Rejected
                         </span>
-                    {% elif s['admin_review'] == 'Needs Improvement' %}
+                    {% elif s.admin_review == 'Needs Improvement' %}
                         <span style="color: #f59e0b; font-weight: 600;">
                             ⚠️ Needs Improvement
                         </span>
@@ -174,15 +183,15 @@
                 </td>
 
                 <td>
-                    {% if s['score'] %}
-                        {{ s['score'] }}/100
+                    {% if s.score %}
+                        {{ s.score }}/100
                     {% else %}
                         -
                     {% endif %}
                 </td>
 
                 <td>
-                    <a href="/review/{{ s['id'] }}" class="btn-primary">
+                    <a href="/review/{{ s.id }}" class="btn-primary">
                         <i class="fa-solid fa-pen"></i>
                         Review
                     </a>

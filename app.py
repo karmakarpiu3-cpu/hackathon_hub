@@ -437,6 +437,19 @@ def db_viewer():
     return render_template('db_viewer.html',
                            users=users,
                            submissions=submissions)
+@app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    if session.get('role') != 'admin':
+        return redirect('/login')
+
+    conn = get_db_connection()
+    conn.execute("DELETE FROM submissions WHERE user_id = ?", (user_id,))
+    conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    flash('User deleted successfully!', 'success')
+    return redirect('/admin')
 
 
 if __name__ == '__main__':
